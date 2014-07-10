@@ -40,39 +40,39 @@ var server = app.listen(3000, function() {
 });
 
 var users = [
-   {
-     id: 'jonbukiewicz',
-     name: 'Jon Bukiewicz',
-     email: 'jonathan@tenebroso.net',
-     photo:'assets/avatars/JonB.jpg',
-     password: '1234',
-     following: ['johndoe','sally'],
-     followers: ['johndoe','sally'],
-     posts:['1','4']
-   },
-   {
-     id: 'johndoe',
-     name: 'John Doe',
-     email: 'johndoetelegramtest@gmail.com',
-     photo:'assets/avatars/LouisCK.jpg',
-     password: '1234',
-     following: ['jonbukiewicz','sally'],
-     followers: ['jonbukiewicz','sally'],
-     posts:['2']
-   },
-   {
-     id: 'sally',
-     name: 'Sally Jessy Raphael',
-     email: 'sallytelegramtest@gmail.com',
-     photo:'assets/avatars/Sally.jpg',
-     password: '1234',
-     following: ['johndoe','jonbukiewicz'],
-     followers: ['johndoe','jonbukiewicz'],
-     post:['3']
-   }
-  ];
+	{
+		id: 'jonbukiewicz',
+		name: 'Jon Bukiewicz',
+		email: 'jonathan@tenebroso.net',
+		photo:'assets/avatars/JonB.jpg',
+		password: '1234',
+		following: ['johndoe','sally'],
+		followers: ['johndoe','sally'],
+		posts:['1','4']
+	},
+	{
+		id: 'johndoe',
+		name: 'John Doe',
+		email: 'johndoetelegramtest@gmail.com',
+		photo:'assets/avatars/LouisCK.jpg',
+		password: '1234',
+		following: ['jonbukiewicz','sally'],
+		followers: ['jonbukiewicz','sally'],
+		posts:['2']
+	},
+	{
+		id: 'sally',
+		name: 'Sally Jessy Raphael',
+		email: 'sallytelegramtest@gmail.com',
+		photo:'assets/avatars/Sally.jpg',
+		password: '1234',
+		following: ['johndoe','jonbukiewicz'],
+		followers: ['johndoe','jonbukiewicz'],
+		post:['3']
+	}
+];
 
-  var posts = [
+var posts = [
 	{
 		id: 1,
 		date: 'Tue, 10 Jun 2014 12:00:00 GMT',
@@ -97,4 +97,4 @@ var users = [
 		content: 'Hello world! http://google.com',
 		user: 'jonbukiewicz'
 	}
-  ];
+];
