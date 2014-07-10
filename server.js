@@ -32,12 +32,21 @@ app.get('/api/posts/:post_id', function(req, res) {
 // User Routes
 
 app.get('/api/user/:user_id', function(req, res) {
+
+	// http://expressjs.com/4x/api.html#req.params
+	var usertest = req.params.user_id;
+	console.log(usertest);
+
+	//http://expressjs.com/4x/api.html#res.send
 	res.send(200);
+
 });
 
 var server = app.listen(3000, function() {
 	console.log('Listening on port %d', server.address().port);
 });
+
+//http://emberjs.com/guides/models/connecting-to-an-http-server/
 
 var users = [
 	{
