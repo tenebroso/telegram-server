@@ -22,7 +22,11 @@ app.get('/api/getpassword', function(req, res) {
 // Post Route
 
 app.get('/api/posts', function(req, res) {
-	res.send(200);
+	res.send(200, {posts: post});
+});
+
+app.post('/api/posts', function(req, res) {
+
 });
 
 app.get('/api/posts/:post_id', function(req, res) {
@@ -31,14 +35,15 @@ app.get('/api/posts/:post_id', function(req, res) {
 
 // User Routes
 
-app.get('/api/user/:user_id', function(req, res) {
+app.get('/api/users/:user_id', function(req, res) {
 
 	// http://expressjs.com/4x/api.html#req.params
-	var usertest = req.params.user_id;
-	console.log(usertest);
+	var userId = req.params.user_id;
 
 	//http://expressjs.com/4x/api.html#res.send
-	res.send(200);
+	res.send(200, {user: user});
+
+	console.log('Received request to retrieve user having id', req.params.user_id);
 
 });
 
@@ -48,7 +53,7 @@ var server = app.listen(3000, function() {
 
 //http://emberjs.com/guides/models/connecting-to-an-http-server/
 
-var users = [
+var user = [
 	{
 		id: 'jonbukiewicz',
 		name: 'Jon Bukiewicz',
@@ -81,7 +86,7 @@ var users = [
 	}
 ];
 
-var posts = [
+var post = [
 	{
 		id: 1,
 		date: 'Tue, 10 Jun 2014 12:00:00 GMT',
