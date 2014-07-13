@@ -1,5 +1,8 @@
 var express = require('express');
+var bodyParser = require('body-parser')
 var app = express();
+
+app.use(bodyParser.json(user));
 
 // Public Routes
 
@@ -39,11 +42,33 @@ app.get('/api/users/:user_id', function(req, res) {
 
 	// http://expressjs.com/4x/api.html#req.params
 	var userId = req.params.user_id;
+	//var data = JSON.parse(data);
+	res.send(200);
 
+	function contains(arr, v) {
+	  return str.indexOf(v) > -1;
+	}
+
+	//http://stackoverflow.com/a/6384527
+
+	var hasMatch = false;
+
+	for (var index = 0; index < user.length; ++index) {
+		var users = user[index];
+
+		//console.log(users.id);
+
+		if(users.id === userId) {
+			hasMatch = true;
+			console.log('found');
+		} else {
+			console.log('not found');
+		}
+	}
 	//http://expressjs.com/4x/api.html#res.send
-	res.send(200, {user: user});
+	//res.send(200, {user: user});
 
-	console.log('Received request to retrieve user having id', req.params.user_id);
+	//console.log('Received request to retrieve user having id', userName);
 
 });
 
