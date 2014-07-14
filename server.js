@@ -12,6 +12,30 @@ app.get('/', function(req, res) {
 
 app.get('/api/login', function(req, res) {
 	res.send(200);
+
+	// http://expressjs.com/4x/api.html#req.params
+	//var username = user[index];
+
+	/*function contains(arr, v) {
+	  return str.indexOf(v) > -1;
+	}
+
+	//http://stackoverflow.com/a/6384527
+	var hasMatch = false;
+	for (var index = 0; index < user.length; ++index) {
+		
+		var users = user[index];
+
+		if(users.id === userId) {
+			hasMatch = true;
+			console.log('found');
+		} else {
+			console.log('not found');
+		}
+	}
+
+	res.send(200, {user: user});*/
+
 });
 
 app.get('/api/signup', function(req, res) {
@@ -38,25 +62,29 @@ app.get('/api/posts/:post_id', function(req, res) {
 
 // User Routes
 
+app.get('/api/users', function(req, res) {
+	res.send(200, {user:user});
+});
+
 app.get('/api/users/:user_id', function(req, res) {
 
 	// http://expressjs.com/4x/api.html#req.params
-	var userId = req.params.user_id;
+	//var userId = req.params.user_id;
 	//var data = JSON.parse(data);
-	res.send(200);
+	res.send(200, {user:user});
 
-	function contains(arr, v) {
+	/*function contains(arr, v) {
 	  return str.indexOf(v) > -1;
 	}
 
 	//http://stackoverflow.com/a/6384527
-
 	var hasMatch = false;
-
 	for (var index = 0; index < user.length; ++index) {
+		
 		var users = user[index];
+		var username = users.id;
 
-		//console.log(users.id);
+		console.log(username);
 
 		if(users.id === userId) {
 			hasMatch = true;
@@ -65,9 +93,7 @@ app.get('/api/users/:user_id', function(req, res) {
 			console.log('not found');
 		}
 	}
-	//http://expressjs.com/4x/api.html#res.send
-	//res.send(200, {user: user});
-
+*/
 	//console.log('Received request to retrieve user having id', userName);
 
 });
