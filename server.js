@@ -2,58 +2,29 @@ var express = require('express');
 var bodyParser = require('body-parser')
 var app = express();
 
-app.use(bodyParser.json(user));
-
-// Public Routes
-
-app.get('/', function(req, res) {
-	res.send(200);
-});
-
-app.get('/api/login', function(req, res) {
-	res.send(200);
-
-	// http://expressjs.com/4x/api.html#req.params
-	//var username = user[index];
-
-	/*function contains(arr, v) {
-	  return str.indexOf(v) > -1;
-	}
-
-	//http://stackoverflow.com/a/6384527
-	var hasMatch = false;
-	for (var index = 0; index < user.length; ++index) {
-		
-		var users = user[index];
-
-		if(users.id === userId) {
-			hasMatch = true;
-			console.log('found');
-		} else {
-			console.log('not found');
-		}
-	}
-
-	res.send(200, {user: user});*/
-
-});
-
-app.get('/api/signup', function(req, res) {
-	res.send(200);
-});
-
-app.get('/api/getpassword', function(req, res) {
-	res.send(200);
-});
-
-// Post Route
+app.use(bodyParser());
 
 app.get('/api/posts', function(req, res) {
-	res.send(200, {posts: post});
+	res.send(200, {posts: posts});
 });
 
 app.post('/api/posts', function(req, res) {
 
+	var postCount = posts.length+2;
+	var newId = postCount++;
+
+	var post = {
+		id : newId,
+		content : req.body.post.content,
+		date: req.body.post.date,
+		user: req.body.post.user
+	};
+
+	posts.push(post);
+
+	res.send(200, {post:post});
+
+	//console.log(post);
 });
 
 app.get('/api/posts/:post_id', function(req, res) {
@@ -69,32 +40,17 @@ app.get('/api/users', function(req, res) {
 app.get('/api/users/:user_id', function(req, res) {
 
 	// http://expressjs.com/4x/api.html#req.params
-	//var userId = req.params.user_id;
-	//var data = JSON.parse(data);
-	res.send(200, {user:user});
+	
+	var userId = req.params.user_id;
 
-	/*function contains(arr, v) {
-	  return str.indexOf(v) > -1;
-	}
-
-	//http://stackoverflow.com/a/6384527
-	var hasMatch = false;
-	for (var index = 0; index < user.length; ++index) {
-		
-		var users = user[index];
-		var username = users.id;
-
-		console.log(username);
-
-		if(users.id === userId) {
-			hasMatch = true;
-			console.log('found');
-		} else {
-			console.log('not found');
+	for (var i = 0; i < users.length; i++) {
+		if (userId == users[i].id) {
+			return res.send(200, {user:users[i]});
 		}
 	}
-*/
-	//console.log('Received request to retrieve user having id', userName);
+
+	return res.send(404);
+
 
 });
 
@@ -104,13 +60,13 @@ var server = app.listen(3000, function() {
 
 //http://emberjs.com/guides/models/connecting-to-an-http-server/
 
-var user = [
+var users = [
 	{
 		id: 'jonbukiewicz',
 		name: 'Jon Bukiewicz',
 		email: 'jonathan@tenebroso.net',
 		photo:'assets/avatars/JonB.jpg',
-		password: '1234',
+		password: '12345',
 		following: ['johndoe','sally'],
 		followers: ['johndoe','sally'],
 		posts:['1','4']
@@ -137,11 +93,11 @@ var user = [
 	}
 ];
 
-var post = [
+var posts = [
 	{
 		id: 1,
 		date: 'Tue, 10 Jun 2014 12:00:00 GMT',
-		content: 'Great teams constantly learn how to lorem ipsum lorem ipsum.',
+		content: 'Test! Great teams constantly learn how to lorem ipsum lorem ipsum.',
 		user: 'jonbukiewicz',
 	},
 	{
