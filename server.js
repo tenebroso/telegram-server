@@ -52,12 +52,17 @@ app.get('/api/users', function(req, res) {
 	var password = req.query.password;
 	var operation = req.query.operation;
 
+	var loggedIn = false;
+
 	if(operation == 'login') {
 		for (var i =0; i < users.length; i++) {
 			if ( username == users[i].id && password == users[i].password) {
-
+				var loggedIn = true;
 				var foundUser = users[i];
 				return res.send(200, {users:[foundUser]});
+			}
+			if(loggedIn == false) {
+				return res.send(400);
 			}
 		}
 	}
