@@ -33,8 +33,37 @@ app.get('/api/posts/:post_id', function(req, res) {
 
 // User Routes
 
+app.post('/api/users', function(req, res) {
+	//res.send(200, {user:user});
+
+	var userData = {
+		id: req.body.user.username,
+		password: req.body.user.password
+	};
+
+	user.push(userData);
+	res.send(200, {user:userData});
+
+});
+
 app.get('/api/users', function(req, res) {
-	res.send(200, {user:user});
+
+	var username = req.query.username;
+	var password = req.query.password;
+	var operation = req.query.operation;
+
+	if(operation == 'login') {
+		for (var i =0; i < users.length; i++) {
+			if ( username == users[i].id && password == users[i].password) {
+
+				var foundUser = users[i];
+				return res.send(200, {users:[foundUser]});
+			}
+		}
+	}
+
+	//res.send(404);
+
 });
 
 app.get('/api/users/:user_id', function(req, res) {
@@ -66,7 +95,7 @@ var users = [
 		name: 'Jon Bukiewicz',
 		email: 'jonathan@tenebroso.net',
 		photo:'assets/avatars/JonB.jpg',
-		password: '12345',
+		password: '1',
 		following: ['johndoe','sally'],
 		followers: ['johndoe','sally'],
 		posts:['1','4']
@@ -76,7 +105,7 @@ var users = [
 		name: 'John Doe',
 		email: 'johndoetelegramtest@gmail.com',
 		photo:'assets/avatars/LouisCK.jpg',
-		password: '1234',
+		password: '2',
 		following: ['jonbukiewicz','sally'],
 		followers: ['jonbukiewicz','sally'],
 		posts:['2']
