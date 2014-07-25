@@ -27,10 +27,6 @@ app.post('/api/posts', function(req, res) {
 	//console.log(post);
 });
 
-app.get('/api/posts/:post_id', function(req, res) {
-	res.send(200);
-});
-
 // User Routes
 
 app.post('/api/users', function(req, res) {
@@ -65,9 +61,23 @@ app.get('/api/users', function(req, res) {
 				return res.send(400);
 			}
 		}
+	} else {
+
+		var userId = req.params.user_id;
+
+		for (var i = 0; i < users.length; i++) {
+			if (userId == users[i].id) {
+				return res.send(200, {
+					user:users[i],
+					following:users[i].following
+				});
+			}
+		}
+
+		return res.send(404);
 	}
 
-	//res.send(404);
+	
 
 });
 
