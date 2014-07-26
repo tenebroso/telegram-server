@@ -51,30 +51,16 @@ app.get('/api/users', function(req, res) {
 	var loggedIn = false;
 
 	if(operation == 'login') {
+		
 		for (var i =0; i < users.length; i++) {
 			if ( username == users[i].id && password == users[i].password) {
 				var loggedIn = true;
 				var foundUser = users[i];
 				return res.send(200, {users:[foundUser]});
 			}
-			if(loggedIn == false) {
-				return res.send(400);
-			}
-		}
-	} else {
-
-		var userId = req.params.user_id;
-
-		for (var i = 0; i < users.length; i++) {
-			if (userId == users[i].id) {
-				return res.send(200, {
-					user:users[i],
-					following:users[i].following
-				});
-			}
 		}
 
-		return res.send(404);
+		return res.send(400);
 	}
 
 	
