@@ -4,6 +4,9 @@
   "version": "0.0.1",
   "private": true,
   "dependencies": {
-    "express": "4.x"
+    "express": "4.x",
+    "passport": "~0.2.0",
+    "passport-local": "~1.0.0",
+    "express-session": "~1.2.1"
   }
 }

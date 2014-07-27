@@ -1,5 +1,7 @@
 var express = require('express');
-var bodyParser = require('body-parser')
+var bodyParser = require('body-parser');
+var passport = require('passport');
+var LocalStrategy = require('passport-local').Strategy;
 var app = express();
 
 app.use(bodyParser());
@@ -51,7 +53,7 @@ app.get('/api/users', function(req, res) {
 	var loggedIn = false;
 
 	if(operation == 'login') {
-		
+
 		for (var i =0; i < users.length; i++) {
 			if ( username == users[i].id && password == users[i].password) {
 				var loggedIn = true;
