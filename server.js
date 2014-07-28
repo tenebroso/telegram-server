@@ -2,9 +2,42 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
+var session = require('express-session');
 var app = express();
 
 app.use(bodyParser());
+app.use(session({secret: 'keyboard cat'}));
+app.use(passport.initialize());
+app.use(passport.session());
+
+passport.use(new LocalStrategy({
+		usernameField: 'id'
+	},
+	function(username, password, done) {
+		for (var i = 0; i < users.length; i++) {
+			if (username == users[i].id && 
+				password == users[i].password) {
+				var loggedIn = true;
+				var foundUser = users[i];
+				return res.send(200, {users:[foundUser]});
+			}
+		}
+	}
+));
+
+passport.serializeUser(function(user, done) {
+	console.log('serialized');
+	done(null, user.id);
+});
+
+passport.deserializeUser(function(id, done) {
+	console.log('deserialized');
+	for(var i = 0; i < users.length ; i++){
+		if(id === users[i].id){
+			done(null, users[i]);
+		}
+	}
+});
 
 app.get('/api/posts', function(req, res) {
 	res.send(200, {posts: posts});
@@ -55,7 +88,8 @@ app.get('/api/users', function(req, res) {
 	if(operation == 'login') {
 
 		for (var i =0; i < users.length; i++) {
-			if ( username == users[i].id && password == users[i].password) {
+			if (username == users[i].id && 
+				password == users[i].password) {
 				var loggedIn = true;
 				var foundUser = users[i];
 				return res.send(200, {users:[foundUser]});
