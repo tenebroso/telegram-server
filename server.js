@@ -10,23 +10,25 @@ app.use(session({secret: 'keyboard cat'}));
 app.use(passport.initialize());
 app.use(passport.session());
 
-passport.use(new LocalStrategy({
-		usernameField: 'id'
-	},
+passport.use(new LocalStrategy(
 	function(username, password, done) {
+		console.log(username,password);
 		for (var i = 0; i < users.length; i++) {
 			if (username == users[i].id && 
 				password == users[i].password) {
+
 				var loggedIn = true;
 				var foundUser = users[i];
-				return res.send(200, {users:[foundUser]});
+				console.log(foundUser);
+				done(null, foundUser);
+
 			}
 		}
 	}
 ));
 
 passport.serializeUser(function(user, done) {
-	console.log('serialized');
+	console.log(user);
 	done(null, user.id);
 });
 
@@ -77,7 +79,7 @@ app.post('/api/users', function(req, res) {
 
 });
 
-app.get('/api/users', function(req, res) {
+app.get('/api/users', function(req, res, next) {
 
 	var username = req.query.username;
 	var password = req.query.password;
@@ -89,12 +91,14 @@ app.get('/api/users', function(req, res) {
 
 		console.log('passport');
 
-		passport.authenticate('local'),
-		function(req, res) {
-			// If this function gets called, authentication was successful.
-			// `req.user` contains the authenticated user.
-			res.redirect('/users/' + req.user.username);
-		}
+		passport.authenticate('local', function(err, user, info) {
+			
+			req.logIn(user, function(err) {
+				if (err) { return next(err); }
+				return res.send(200, {users:[user]});
+			});
+
+		})(req, res, next);
 	}
 
 	
