@@ -87,16 +87,14 @@ app.get('/api/users', function(req, res) {
 
 	if(operation == 'login') {
 
-		for (var i =0; i < users.length; i++) {
-			if (username == users[i].id && 
-				password == users[i].password) {
-				var loggedIn = true;
-				var foundUser = users[i];
-				return res.send(200, {users:[foundUser]});
-			}
-		}
+		console.log('passport');
 
-		return res.send(400);
+		passport.authenticate('local'),
+		function(req, res) {
+			// If this function gets called, authentication was successful.
+			// `req.user` contains the authenticated user.
+			res.redirect('/users/' + req.user.username);
+		}
 	}
 
 	
