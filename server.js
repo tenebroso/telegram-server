@@ -12,14 +12,14 @@ app.use(passport.session());
 
 passport.use(new LocalStrategy(
 	function(username, password, done) {
-		console.log(username,password);
+
 		for (var i = 0; i < users.length; i++) {
 			if (username == users[i].id && 
 				password == users[i].password) {
 
 				var loggedIn = true;
 				var foundUser = users[i];
-				console.log(foundUser);
+
 				done(null, foundUser);
 
 			}
@@ -69,7 +69,6 @@ app.post('/api/posts', ensureAuthenticated, function(req, res) {
 
 	res.send(200, {post:post});
 
-	//console.log(post);
 });
 
 // User Routes
@@ -107,8 +106,6 @@ app.get('/api/users', function(req, res, next) {
 		})(req, res, next);
 	}
 
-	
-
 });
 
 app.get('/api/users/:user_id', function(req, res) {
@@ -125,7 +122,12 @@ app.get('/api/users/:user_id', function(req, res) {
 
 	return res.send(404);
 
+});
 
+app.get('/api/logout', function(req, res){
+	console.log('logging out');
+	req.logout();
+	res.redirect('/');
 });
 
 var server = app.listen(3000, function() {
@@ -139,7 +141,7 @@ var users = [
 		id: 'jonbukiewicz',
 		name: 'Jon Bukiewicz',
 		email: 'jonathan@tenebroso.net',
-		photo:'assets/avatars/JonB.jpg',
+		photo:'assets/avatars/avatar-blue.png',
 		password: '1',
 		following: ['johndoe','sally'],
 		followers: ['johndoe','sally'],
@@ -149,7 +151,7 @@ var users = [
 		id: 'johndoe',
 		name: 'John Doe',
 		email: 'johndoetelegramtest@gmail.com',
-		photo:'assets/avatars/LouisCK.jpg',
+		photo:'assets/avatars/avatar-green.png',
 		password: '2',
 		following: ['jonbukiewicz','sally'],
 		followers: ['jonbukiewicz','sally'],
@@ -159,7 +161,7 @@ var users = [
 		id: 'sally',
 		name: 'Sally Jessy Raphael',
 		email: 'sallytelegramtest@gmail.com',
-		photo:'assets/avatars/Sally.jpg',
+		photo:'assets/avatars/avatar-yellow.png',
 		password: '1234',
 		following: ['johndoe','jonbukiewicz'],
 		followers: ['johndoe','jonbukiewicz'],
