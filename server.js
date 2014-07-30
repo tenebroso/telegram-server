@@ -28,12 +28,10 @@ passport.use(new LocalStrategy(
 ));
 
 passport.serializeUser(function(user, done) {
-	console.log(user);
 	done(null, user.id);
 });
 
 passport.deserializeUser(function(id, done) {
-	console.log('deserialized');
 	for(var i = 0; i < users.length ; i++){
 		if(id === users[i].id){
 			done(null, users[i]);
@@ -41,11 +39,21 @@ passport.deserializeUser(function(id, done) {
 	}
 });
 
+function ensureAuthenticated(req, res, next) {
+	if (req.isAuthenticated()) {
+		console.log('authenticated');
+		return next();
+	} else {
+		console.log('not authenticated');
+		return res.send(403);
+	}
+}
+
 app.get('/api/posts', function(req, res) {
 	res.send(200, {posts: posts});
 });
 
-app.post('/api/posts', function(req, res) {
+app.post('/api/posts', ensureAuthenticated, function(req, res) {
 
 	var postCount = posts.length+2;
 	var newId = postCount++;
@@ -88,8 +96,6 @@ app.get('/api/users', function(req, res, next) {
 	var loggedIn = false;
 
 	if(operation == 'login') {
-
-		console.log('passport');
 
 		passport.authenticate('local', function(err, user, info) {
 			
