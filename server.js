@@ -65,9 +65,15 @@ app.post('/api/posts', ensureAuthenticated, function(req, res) {
 		user: req.body.post.user
 	};
 
-	posts.push(post);
+	var postAuthor = post.user;
 
-	res.send(200, {post:post});
+	if (postAuthor == req.user.id) {
+		posts.push(post);
+		return res.send(200, {post:post});
+	}
+
+	return res.send(400);
+	
 
 });
 
@@ -78,6 +84,8 @@ app.post('/api/users', function(req, res) {
 
 	var userData = {
 		id: req.body.user.username,
+		name: req.body.user.name,
+		email: req.body.user.email,
 		password: req.body.user.password
 	};
 
