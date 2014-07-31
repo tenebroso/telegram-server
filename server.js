@@ -112,16 +112,29 @@ app.get('/api/users', function(req, res, next) {
 			});
 
 		})(req, res, next);
-	} else {
 
-		if(req.query.isAuthenticated == true) {
-			console.log('logged in');
-			res.send(200, {user:[req.user]});
+	} else if(req.query.isAuthenticated == true) {
+
+		console.log('param is authenticated'); 
+
+		if (req.isAuthenticated()) {
+
+			console.log('logged in, send the logged in user');
+			res.send(200, {users:[req.user]});
+
 		} else {
-			console.log('not logged in');
-			res.send(404);
+
+			console.log('send empty array of users');
+			res.send(200, {users:[]});
+
 		}
 		
+
+	} else {
+
+		console.log('send all users');
+		res.send(200, {users:[users]});
+
 	}
 
 });
