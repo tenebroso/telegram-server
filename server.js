@@ -127,7 +127,7 @@ app.get('/api/users/:user_id', function(req, res) {
 app.get('/api/logout', function(req, res){
 	console.log('logging out');
 	req.logout();
-	res.redirect('/');
+	return res.send(200);
 });
 
 var server = app.listen(3000, function() {
