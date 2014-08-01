@@ -99,6 +99,7 @@ app.get('/api/users', function(req, res, next) {
 	var username = req.query.username;
 	var password = req.query.password;
 	var operation = req.query.operation;
+	var authenticationCheck = req.query.isAuthenticated;
 
 	var loggedIn = false;
 
@@ -113,7 +114,7 @@ app.get('/api/users', function(req, res, next) {
 
 		})(req, res, next);
 
-	} else if(req.query.isAuthenticated == true) {
+	} else if(authenticationCheck == 'true') {
 
 		console.log('param is authenticated'); 
 
