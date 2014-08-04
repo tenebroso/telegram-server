@@ -86,18 +86,11 @@ app.post('/api/users', function(req, res) {
 		id: req.body.user.username,
 		name: req.body.user.name,
 		email: req.body.user.email,
-		password: req.body.user.password,
-		following: [],
-		followers: [],
-		posts: []
+		password: req.body.user.password
 	};
 
 	user.push(userData);
-	req.logIn(user, function(err) {
-		if (err) { return next(err); }
-		return res.send(200, {users:[userData]});
-	});
-	//res.send(200, {user:userData});
+	res.send(200, {user:userData});
 
 });
 
@@ -106,6 +99,8 @@ app.get('/api/users', function(req, res, next) {
 	var username = req.query.username;
 	var password = req.query.password;
 	var operation = req.query.operation;
+	var followedBy = req.query.followedBy;
+	var following = req.query.following;
 	var isAuthenticated = req.query.isAuthenticated;
 
 	var loggedIn = false;
@@ -123,19 +118,26 @@ app.get('/api/users', function(req, res, next) {
 
 	} else if(isAuthenticated == 'true') {
 
+		console.log('param is authenticated'); 
+
 		if (req.isAuthenticated()) {
 
+			console.log('logged in, send the logged in user');
 			res.send(200, {users:[req.user]});
 
 		} else {
 
+			console.log('send empty array of users');
 			res.send(200, {users:[]});
 
 		}
 		
 
+	} else if(req.query.followedBy) {
+		console.log('fuck');
 	} else {
 
+		console.log('send all users');
 		res.send(200, {users:[users]});
 
 	}
