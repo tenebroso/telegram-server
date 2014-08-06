@@ -25,7 +25,7 @@ var userSchema = new mongoose.Schema({
 	posts: [{posts: String}]
 });
 
-mongoose.model('users', userSchema);
+var User = mongoose.model('users', userSchema);
 
 app.use(bodyParser());
 app.use(session({secret: 'keyboard cat'}));
@@ -54,11 +54,9 @@ passport.serializeUser(function(user, done) {
 });
 
 passport.deserializeUser(function(id, done) {
-	for(var i = 0; i < users.length ; i++){
-		if(id === users[i].id){
-			done(null, users[i]);
-		}
-	}
+	User.findOne({id:id}, function(err, user){
+		done(err,user);
+	});
 });
 
 function ensureAuthenticated(req, res, next) {
@@ -105,14 +103,21 @@ app.post('/api/users', function(req, res) {
 	//res.send(200, {user:user});
 
 	var userData = {
-		id: req.body.user.username,
 		name: req.body.user.name,
+		id: req.body.user.id,
 		email: req.body.user.email,
 		password: req.body.user.password
 	};
 
-	user.push(userData);
-	res.send(200, {user:userData});
+	var newUser = new User(userData);
+
+	newUser.save(function(err, newUser){
+		req.login(newUser, function(err) {
+			if(err) { return res.send(400); }
+			return res.send(200, {user:newUser});
+		})
+	});
+	
 
 });
 
@@ -131,7 +136,7 @@ app.get('/api/users', function(req, res, next) {
 
 		passport.authenticate('local', function(err, user, info) {
 			
-			req.logIn(user, function(err) {
+			req.logIn(user, function(err, next) {
 				if (err) { return next(err); }
 				//return res.send(200, {users:[user]});
 				mongoose.model('users').find({user:[user]}, function(err, users){
@@ -175,19 +180,15 @@ app.get('/api/users', function(req, res, next) {
 
 });
 
-app.get('/api/users/:id', function(req, res) {
+app.get('/api/users/:user_id', function(req, res) {
 
 	// http://expressjs.com/4x/api.html#req.params
 	
-	var userId = req.params.id;
+	var userId = req.params.user_id;
 
-	mongoose.model('users').find({user:[userId.id]}, function(err, user){
-		if(err) return res.send(404);
-		for (var i = 0; i < users.length; i++) {
-		if (userId == users[i].id) {
-				return res.send(200, {user:users[i]});
-			}
-		}
+	mongoose.model('users').findOne({id:userId}, function(err, user){
+		if(err || !user) return res.send(404);
+		return res.send(200, {user:user});
 	});
 
 
@@ -204,39 +205,6 @@ var server = app.listen(3000, function() {
 });
 
 //http://emberjs.com/guides/models/connecting-to-an-http-server/
-
-var users = [
-	{
-		id: 'jonbukiewicz',
-		name: 'Jon Bukiewicz',
-		email: 'jonathan@tenebroso.net',
-		photo:'assets/avatars/avatar-blue.png',
-		password: '1',
-		following: ['johndoe','sally'],
-		followers: ['johndoe','sally'],
-		posts:['1','4']
-	},
-	{
-		id: 'johndoe',
-		name: 'John Doe',
-		email: 'johndoetelegramtest@gmail.com',
-		photo:'assets/avatars/avatar-green.png',
-		password: '2',
-		following: ['jonbukiewicz','sally'],
-		followers: ['jonbukiewicz','sally'],
-		posts:['2']
-	},
-	{
-		id: 'sally',
-		name: 'Sally Jessy Raphael',
-		email: 'sallytelegramtest@gmail.com',
-		photo:'assets/avatars/avatar-yellow.png',
-		password: '1234',
-		following: ['johndoe','jonbukiewicz'],
-		followers: ['johndoe','jonbukiewicz'],
-		post:['3']
-	}
-];
 
 var posts = [
 	{
