@@ -144,7 +144,7 @@ app.get('/api/users', function(req, res, next) {
 		passport.authenticate('local', function(err, user, info) {
 			
 			req.logIn(user, function(err, next) {
-				if (err) { return next(err); }
+				if (err) { return res.send(404); }
 				return res.send(200, {users:[user]});
 			});
 
