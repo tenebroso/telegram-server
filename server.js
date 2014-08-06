@@ -175,19 +175,27 @@ app.get('/api/users', function(req, res, next) {
 
 });
 
-app.get('/api/users/:user_id', function(req, res) {
+app.get('/api/users/:id', function(req, res) {
 
 	// http://expressjs.com/4x/api.html#req.params
 	
-	var userId = req.params.user_id;
+	var userId = req.params.id;
 
-	for (var i = 0; i < users.length; i++) {
+	mongoose.model('users').find({user:[userId.id]}, function(err, user){
+		if(err) return res.send(404);
+		for (var i = 0; i < users.length; i++) {
 		if (userId == users[i].id) {
-			return res.send(200, {user:users[i]});
+				return res.send(200, {user:users[i]});
+			}
 		}
-	}
+		//return res.send(200, user[i]);
+	});
 
-	return res.send(404);
+	
+
+	
+
+
 
 });
 
