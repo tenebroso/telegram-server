@@ -188,13 +188,7 @@ app.get('/api/users/:id', function(req, res) {
 				return res.send(200, {user:users[i]});
 			}
 		}
-		//return res.send(200, user[i]);
 	});
-
-	
-
-	
-
 
 
 });
