@@ -35,7 +35,13 @@ app.use(passport.session());
 passport.use(new LocalStrategy(
 	function(username, password, done) {
 
-		for (var i = 0; i < users.length; i++) {
+		User.findOne({id:username}, function(err, user){
+			if(!user){ return done(null, false); }
+			if(user.password != password) { return done(null, false); }
+			return done(null, user);
+		});
+
+		/*for (var i = 0; i < users.length; i++) {
 			if (username == users[i].id && 
 				password == users[i].password) {
 
@@ -45,7 +51,7 @@ passport.use(new LocalStrategy(
 				done(null, foundUser);
 
 			}
-		}
+		}*/
 	}
 ));
 
@@ -106,7 +112,8 @@ app.post('/api/users', function(req, res) {
 		name: req.body.user.name,
 		id: req.body.user.id,
 		email: req.body.user.email,
-		password: req.body.user.password
+		password: req.body.user.password,
+		photo: '/assets/avatars/avatar-orange.png'
 	};
 
 	var newUser = new User(userData);
@@ -138,10 +145,7 @@ app.get('/api/users', function(req, res, next) {
 			
 			req.logIn(user, function(err, next) {
 				if (err) { return next(err); }
-				//return res.send(200, {users:[user]});
-				mongoose.model('users').find({user:[user]}, function(err, users){
-					return res.send(200, {users:[req.user]});
-				});
+				return res.send(200, {users:[user]});
 			});
 
 		})(req, res, next);
