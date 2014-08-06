@@ -5,19 +5,16 @@ var LocalStrategy = require('passport-local').Strategy;
 var session = require('express-session');
 var app = express();
 var mongoose = require('mongoose');
-	mongoose.connect('mongodb://127.0.0.1/telegram');
 var db = mongoose.connection;
+
+mongoose.connect('mongodb://127.0.0.1/telegram');
 
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function callback () {
   console.log('mongodb success');
 });
 
-
-
-var Schema = mongoose.Schema;
-
-var userSchema = new Schema({
+var userSchema = new mongoose.Schema({
 	id: String,
 	name: String,
 	email: String,
@@ -28,7 +25,7 @@ var userSchema = new Schema({
 	posts: [{posts: String}]
 });
 
-var User = mongoose.model('User', userSchema);
+mongoose.model('users', userSchema);
 
 app.use(bodyParser());
 app.use(session({secret: 'keyboard cat'}));
@@ -136,7 +133,10 @@ app.get('/api/users', function(req, res, next) {
 			
 			req.logIn(user, function(err) {
 				if (err) { return next(err); }
-				return res.send(200, {users:[user]});
+				//return res.send(200, {users:[user]});
+				mongoose.model('users').find({user:[user]}, function(err, users){
+					return res.send(200, {users:[req.user]});
+				});
 			});
 
 		})(req, res, next);
@@ -148,7 +148,10 @@ app.get('/api/users', function(req, res, next) {
 		if (req.isAuthenticated()) {
 
 			console.log('logged in, send the logged in user');
-			res.send(200, {users:[req.user]});
+			
+			mongoose.model('users').find({user:req.user}, function(err, users){
+				res.send(200, {users:[req.user]});
+			});
 
 		} else {
 
@@ -159,11 +162,14 @@ app.get('/api/users', function(req, res, next) {
 		
 
 	} else if(req.query.followedBy) {
-		console.log('fuck');
+		
 	} else {
 
 		console.log('send all users');
-		res.send(200, {users:[users]});
+
+		mongoose.model('users').find(function(err, users){
+			res.send(200, {users:[users]});
+		});
 
 	}
 
