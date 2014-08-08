@@ -15,24 +15,11 @@ app.use(passport.session());
 
 passport.use(new LocalStrategy(
 	function(username, password, done) {
-
 		User.findOne({id:username}, function(err, user){
 			if(!user){ return done(null, false); }
 			if(user.password != password) { return done(null, false); }
 			return done(null, user);
 		});
-
-		/*for (var i = 0; i < users.length; i++) {
-			if (username == users[i].id && 
-				password == users[i].password) {
-
-				var loggedIn = true;
-				var foundUser = users[i];
-
-				done(null, foundUser);
-
-			}
-		}*/
 	}
 ));
 
@@ -68,14 +55,12 @@ app.post('/api/posts', ensureAuthenticated, function(req, res) {
 
 	var postCount = posts.length+2;
 	var newId = postCount++;
-
 	var post = {
 		id : newId,
 		content : req.body.post.content,
 		date: req.body.post.date,
 		user: req.body.post.user
 	};
-
 	var newPost = newPost(post);
 	var postAuthor = post.user;
 
@@ -92,7 +77,6 @@ app.post('/api/posts', ensureAuthenticated, function(req, res) {
 // User Routes
 
 app.post('/api/users', function(req, res) {
-	//res.send(200, {user:user});
 
 	var userData = {
 		name: req.body.user.name,
@@ -110,7 +94,6 @@ app.post('/api/users', function(req, res) {
 			return res.send(200, {user:newUser});
 		})
 	});
-	
 
 });
 
@@ -122,7 +105,6 @@ app.get('/api/users', function(req, res, next) {
 	var followedBy = req.query.followedBy;
 	var following = req.query.following;
 	var isAuthenticated = req.query.isAuthenticated;
-
 	var loggedIn = false;
 
 	if(operation == 'login') {
@@ -171,8 +153,6 @@ app.get('/api/users', function(req, res, next) {
 });
 
 app.get('/api/users/:user_id', function(req, res) {
-
-	// http://expressjs.com/4x/api.html#req.params
 	
 	var userId = req.params.user_id;
 
