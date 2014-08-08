@@ -187,32 +187,3 @@ app.get('/api/logout', function(req, res){
 var server = app.listen(3000, function() {
 	console.log('Listening on port %d', server.address().port);
 });
-
-//http://emberjs.com/guides/models/connecting-to-an-http-server/
-
-var posts = [
-	{
-		id: 1,
-		date: 'Tue, 10 Jun 2014 12:00:00 GMT',
-		content: 'Test! Great teams constantly learn how to lorem ipsum lorem ipsum.',
-		user: 'jonbukiewicz',
-	},
-	{
-		id: 2,
-		date: 'Mon, 09 June 2014 12:00:00 GMT',
-		content: 'Hello world!',
-		user: 'johndoe'
-	},
-	{
-		id: 3,
-		date: 'Mon, 05 June 2014 12:00:00 GMT',
-		content: 'Hello world! This is an example of a post that has a <a href="http://google.com">Link Inside</a>',
-		user: 'sally'
-	},
-	{
-		id: 4,
-		date: 'Mon, 17 June 2014 12:00:00 GMT',
-		content: 'Hello world! http://google.com',
-		user: 'jonbukiewicz'
-	}
-];
