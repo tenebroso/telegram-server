@@ -4,9 +4,11 @@ var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 var session = require('express-session');
 var app = express();
-var mongoose = require('mongoose');
 
-require('./database_conn');
+var conn = require('./database_conn');
+
+var User = conn.model('users');
+var Post = conn.model('posts');
 
 app.use(bodyParser());
 app.use(session({secret: 'keyboard cat'}));
@@ -44,30 +46,32 @@ function ensureAuthenticated(req, res, next) {
 }
 
 app.get('/api/posts', function(req, res) {
-	mongoose.model('posts').find(function(err, posts){
+	Post.find(function(err, posts){
 		if(err || !user) return res.send(404);
 		return res.send(200, {posts: posts});
 	});
-	
 });
 
 app.post('/api/posts', ensureAuthenticated, function(req, res) {
 
-	var postCount = posts.length+2;
-	var newId = postCount++;
 	var post = {
-		id : newId,
 		content : req.body.post.content,
 		date: req.body.post.date,
 		user: req.body.post.user
 	};
+
 	var newPost = newPost(post);
 	var postAuthor = post.user;
 
 	newPost.save(function(err, newPost){
 		if (postAuthor == req.user.id) {
-			posts.push(post);
-			return res.send(200, {post:post});
+			var emberPost = {
+				id : newPost._id,
+				content : newPost.content,
+				date : newPost.date,
+				user : newPost.user
+			}
+			return res.send(200, {post:emberPost});
 		}
 		return res.send(400);
 	});

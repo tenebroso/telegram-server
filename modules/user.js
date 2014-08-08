@@ -11,4 +11,4 @@ var userSchema = new mongoose.Schema({
 	posts: [{posts: String}]
 });
 
-var User = mongoose.model('users', userSchema);
+module.exports = userSchema;
