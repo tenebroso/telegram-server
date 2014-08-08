@@ -4,9 +4,7 @@ var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 var session = require('express-session');
 var app = express();
-
 var conn = require('./database_conn');
-
 var User = conn.model('users');
 var Post = conn.model('posts');
 
@@ -47,7 +45,7 @@ function ensureAuthenticated(req, res, next) {
 
 app.get('/api/posts', function(req, res) {
 	Post.find(function(err, posts){
-		if(err || !user) return res.send(404);
+		if(err || !posts) return res.send(404);
 		return res.send(200, {posts: posts});
 	});
 });
@@ -130,7 +128,7 @@ app.get('/api/users', function(req, res, next) {
 
 			console.log('logged in, send the logged in user');
 			
-			mongoose.model('users').find({user:req.user}, function(err, users){
+			User.find({user:req.user}, function(err, users){
 				res.send(200, {users:[req.user]});
 			});
 
@@ -148,7 +146,7 @@ app.get('/api/users', function(req, res, next) {
 
 		console.log('send all users');
 
-		mongoose.model('users').find(function(err, users){
+		User.find(function(err, users){
 			res.send(200, {users:[users]});
 		});
 
@@ -160,7 +158,7 @@ app.get('/api/users/:user_id', function(req, res) {
 	
 	var userId = req.params.user_id;
 
-	mongoose.model('users').findOne({id:userId}, function(err, user){
+	User.findOne({id:userId}, function(err, user){
 		if(err || !user) return res.send(404);
 		return res.send(200, {user:user});
 	});
