@@ -4,28 +4,8 @@ var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 var session = require('express-session');
 var app = express();
-var mongoose = require('mongoose');
-var db = mongoose.connection;
 
-mongoose.connect('mongodb://127.0.0.1/telegram');
-
-db.on('error', console.error.bind(console, 'connection error:'));
-db.once('open', function callback () {
-  console.log('mongodb success');
-});
-
-var userSchema = new mongoose.Schema({
-	id: String,
-	name: String,
-	email: String,
-	photo: String,
-	password: String,
-	followers: [{followers: String}],
-	following: [{following: String}],
-	posts: [{posts: String}]
-});
-
-var User = mongoose.model('users', userSchema);
+require('./database_conn');
 
 app.use(bodyParser());
 app.use(session({secret: 'keyboard cat'}));
