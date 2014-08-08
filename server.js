@@ -4,6 +4,7 @@ var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 var session = require('express-session');
 var app = express();
+var mongoose = require('mongoose');
 
 require('./database_conn');
 
@@ -56,7 +57,11 @@ function ensureAuthenticated(req, res, next) {
 }
 
 app.get('/api/posts', function(req, res) {
-	res.send(200, {posts: posts});
+	mongoose.model('posts').find(function(err, posts){
+		if(err || !user) return res.send(404);
+		return res.send(200, {posts: posts});
+	});
+	
 });
 
 app.post('/api/posts', ensureAuthenticated, function(req, res) {
@@ -71,15 +76,16 @@ app.post('/api/posts', ensureAuthenticated, function(req, res) {
 		user: req.body.post.user
 	};
 
+	var newPost = newPost(post);
 	var postAuthor = post.user;
 
-	if (postAuthor == req.user.id) {
-		posts.push(post);
-		return res.send(200, {post:post});
-	}
-
-	return res.send(400);
-	
+	newPost.save(function(err, newPost){
+		if (postAuthor == req.user.id) {
+			posts.push(post);
+			return res.send(200, {post:post});
+		}
+		return res.send(400);
+	});
 
 });
 
