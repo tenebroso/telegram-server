@@ -9,6 +9,7 @@
     "passport-local": "~1.0.0",
     "express-session": "~1.7.0",
     "mongoose": "~3.8.14",
+    "connect-mongo-store": "~0.1.8",
     "body-parser": "~1.6.2"
   }
 }
