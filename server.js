@@ -46,7 +46,7 @@ function ensureAuthenticated(req, res, next) {
 app.get('/api/posts', function(req, res) {
 	Post.find(function(err, emberPosts){
 		var emberPostsArray = [];
-		emberPosts.forEach(function(post, entry) {
+		emberPosts.forEach(function(post) {
 			var entry = {
 				id : post.id,
 				content : post.content,
