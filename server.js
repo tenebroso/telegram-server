@@ -48,7 +48,7 @@ app.get('/api/posts', function(req, res) {
 		var emberPostsArray = [];
 		emberPosts.forEach(function(post) {
 			var entry = {
-				id : post.id,
+				id : post._id,
 				content : post.content,
 				date : post.date,
 				user : post.user,
