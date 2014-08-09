@@ -3,13 +3,17 @@ var bodyParser = require('body-parser');
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 var session = require('express-session');
+var MongoStore = require('connect-mongostore')(session);
 var app = express();
 var conn = require('./database_conn');
 var User = conn.model('users');
 var Post = conn.model('posts');
 
 app.use(bodyParser());
-app.use(session({secret: 'keyboard cat'}));
+app.use(session({
+	secret: 'keyboard cat',
+	store: new MongoStore({'db': 'telegram'})
+}));
 app.use(passport.initialize());
 app.use(passport.session());
 
