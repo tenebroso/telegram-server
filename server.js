@@ -9,7 +9,8 @@ var conn = require('./database_conn');
 var User = conn.model('users');
 var Post = conn.model('posts');
 var wrapper = require('./modules/emberWrapper.js');
-var operations = require('./modules/userOperations');
+var postOperations = require('./modules/postOperations');
+var userOperations = require('./modules/userOperations');
 
 function getUser() {
 	var user = 'jane';
@@ -19,33 +20,7 @@ function getUser() {
 var myUser = wrapper.emberUser(getUser);
 //console.log('testing this', myUser());
 
-app.use(bodyParser());
-app.use(session({
-	secret: 'keyboard cat',
-	store: new MongoStore({'db': 'telegram'})
-}));
-app.use(passport.initialize());
-app.use(passport.session());
-
-passport.use(new LocalStrategy(
-	function(username, password, done) {
-		User.findOne({id:username}, function(err, user){
-			if(!user){ return done(null, false); }
-			if(user.password != password) { return done(null, false); }
-			return done(null, user);
-		});
-	}
-));
-
-passport.serializeUser(function(user, done) {
-	done(null, user.id);
-});
-
-passport.deserializeUser(function(id, done) {
-	User.findOne({id:id}, function(err, user){
-		done(err,user);
-	});
-});
+app.get('/api/posts', postOperations.getPosts);
 
 function ensureAuthenticated(req, res, next) {
 	if (req.isAuthenticated()) {
@@ -57,99 +32,15 @@ function ensureAuthenticated(req, res, next) {
 	}
 }
 
-app.get('/api/posts', operations.getPosts);
-
-app.post('/api/posts', ensureAuthenticated, operations.createPost);
+app.post('/api/posts', ensureAuthenticated, postOperations.createPost);
 
 // User Routes
 
-app.post('/api/users', function(req, res) {
+app.post('/api/users', userOperations.createUser);
 
-	var userData = {
-		name: req.body.user.name,
-		id: req.body.user.id,
-		email: req.body.user.email,
-		password: req.body.user.password,
-		photo: '/assets/avatars/avatar-orange.png'
-	};
+app.get('/api/users', userOperations.getAllUsers);
 
-	var newUser = new User(userData);
-
-	newUser.save(function(err, newUser){
-		req.login(newUser, function(err) {
-			if(err) { return res.send(400); }
-			return res.send(200, {user:newUser});
-		})
-	});
-
-});
-
-app.get('/api/users', function(req, res, next) {
-
-	var username = req.query.username;
-	var password = req.query.password;
-	var operation = req.query.operation;
-	var followedBy = req.query.followedBy;
-	var following = req.query.following;
-	var isAuthenticated = req.query.isAuthenticated;
-	var loggedIn = false;
-
-	if(operation == 'login') {
-
-		passport.authenticate('local', function(err, user, info) {
-			
-			req.logIn(user, function(err, next) {
-				if (err) { return res.send(404); }
-				return res.send(200, {users:[user]});
-			});
-
-		})(req, res, next);
-
-	} else if(isAuthenticated == 'true') {
-
-		console.log('param is authenticated'); 
-
-		if (req.isAuthenticated()) {
-
-			console.log('logged in, send the logged in user');
-			
-			User.find({user:req.user}, function(err, users){
-				res.send(200, {users:[req.user]});
-			});
-
-		} else {
-
-			console.log('send empty array of users');
-			res.send(200, {users:[]});
-
-		}
-		
-
-	} else if(req.query.followedBy) {
-		
-	} else {
-
-		console.log('send all users');
-
-		User.find(function(err, users){
-			res.send(200, {users:[users]});
-		});
-
-	}
-
-});
-
-app.get('/api/users/:user_id', function(req, res) {
-	
-	var userId = req.params.user_id;
-
-	User.findOne({id:userId}, function(err, user){
-		if(err || !user) return res.send(404);
-		return res.send(200, {user:user});
-	});
-
-
-});
+app.get('/api/users/:user_id', userOperations.getUser);
 
 app.get('/api/logout', function(req, res){
 	console.log('logging out');
