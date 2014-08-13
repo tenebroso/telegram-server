@@ -2,7 +2,6 @@ var conn = require('../database_conn');
 var User = conn.model('users');
 var wrapper = require('../wrappers/emberWrapper');
 var loginOperations = require('../auth/loginOperation');
-var passport = ('../auth/passport');
 
 exports.createUser = function(req, res) {
 	var userData = {
@@ -41,12 +40,8 @@ exports.getAllUsers = function(req, res, next) {
 	var isAuthenticated = req.query.isAuthenticated;
 	var loggedIn = false;
 	if(operation == 'login') {
-		passport.authenticate('local', function(err, user, info) {
-			req.logIn(user, function(err, next) {
-				if (err) { return res.send(404); }
-				return res.send(200, {users:[user]});
-			});
-		})(req, res, next);
+
+		loginOperations.logIn();
 
 	} else if(isAuthenticated == 'true') {
 		console.log('param is authenticated'); 

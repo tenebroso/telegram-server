@@ -1,6 +1,6 @@
-var passport = require('./passport');
+var passport = require('passport');
 
-exports.logIn = function(user) {
+exports.logIn = function(req, res, next) {
 	passport.authenticate('local', function(err, user, info) {
 		req.logIn(user, function(err, next) {
 			if (err) { return res.send(404); }
