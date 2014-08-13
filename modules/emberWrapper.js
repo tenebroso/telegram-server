@@ -5,7 +5,8 @@ exports.emberUser = function(mongoUser) {
 		email: mongoUser.email,
 		photo: '/assets/avatars/avatar-orange.png'
 	};*/
-	console.log('hello!');
+	console.log('hey out there');
+	return mongoUser;
 	//return userData;
 }
 

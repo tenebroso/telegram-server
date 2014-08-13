@@ -10,7 +10,13 @@ var User = conn.model('users');
 var Post = conn.model('posts');
 var wrapper = require('./modules/emberWrapper.js');
 
-wrapper.emberUser();
+function getUser() {
+	var user = 'jane';
+	return user;
+};
+
+var myUser = wrapper.emberUser(getUser);
+//console.log('testing this', myUser());
 
 app.use(bodyParser());
 app.use(session({
