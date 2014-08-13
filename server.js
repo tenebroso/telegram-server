@@ -8,6 +8,9 @@ var app = express();
 var conn = require('./database_conn');
 var User = conn.model('users');
 var Post = conn.model('posts');
+var wrapper = require('./modules/emberWrapper.js');
+
+wrapper.emberUser();
 
 app.use(bodyParser());
 app.use(session({
