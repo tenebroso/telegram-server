@@ -60,13 +60,13 @@ app.get('/api/posts', function(req, res) {
 	Post.find(function(err, emberPosts){
 		var emberPostsArray = [];
 		emberPosts.forEach(function(post) {
-			var entry = {
+			/*var entry = {
 				id : post._id,
 				content : post.content,
 				date : post.date,
 				user : post.user,
-			}
-			emberPostsArray.push(entry);
+			}*/
+			emberPostsArray.push(wrapper.emberPost(post));
 		});
 		if(err || !emberPosts) return res.send(404);
 		return res.send(200, {posts:emberPostsArray});
@@ -86,13 +86,13 @@ app.post('/api/posts', ensureAuthenticated, function(req, res) {
 
 	newPost.save(function(err, newPost){
 		if (postAuthor == req.user.id) {
-			var emberPost = {
+			/*var emberPost = {
 				id : newPost._id,
 				content : newPost.content,
 				date : newPost.date,
 				user : newPost.user
-			}
-			return res.send(200, {post:emberPost});
+			}*/
+			return res.send(200, {post:wrapper.emberPost(newPost)});
 		}
 		return res.send(400);
 	});
