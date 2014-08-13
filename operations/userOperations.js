@@ -1,7 +1,8 @@
 var conn = require('../database_conn');
 var User = conn.model('users');
 var wrapper = require('../wrappers/emberWrapper');
-var loginOperations = require('../auth/loginOperation');
+var passport = require('passport');
+require('../auth/auth')(passport);
 
 exports.createUser = function(req, res) {
 	var userData = {
@@ -41,7 +42,12 @@ exports.getAllUsers = function(req, res, next) {
 	var loggedIn = false;
 	if(operation == 'login') {
 
-		loginOperations.logIn();
+		passport.authenticate('local', function(err, user, info) {
+			req.logIn(user, function(err, next) {
+				if (err) { return res.send(404); }
+				return res.send(200, {users:[user]});
+			});
+		})(req, res, next);
 
 	} else if(isAuthenticated == 'true') {
 		console.log('param is authenticated'); 
@@ -62,4 +68,10 @@ exports.getAllUsers = function(req, res, next) {
 			res.send(200, {users:[users]});
 		});
 	}
+};
+
+exports.logout = function(req, res){
+	console.log('logging out');
+	req.logout();
+	return res.send(200);
 };

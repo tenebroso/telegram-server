@@ -1,5 +1,7 @@
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
+var conn = require('../database_conn');
+var User = conn.model('users');
 
 module.exports = function(passport) {
 	passport.use(new LocalStrategy(
