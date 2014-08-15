@@ -63,7 +63,7 @@ exports.getAllUsers = function(req, res, next) {
 	} else if(followedBy) {
 
 		var userId = req.query.showFollowers;
-		User.find({followers:userId}, function(err, emberUsersFollowedBy){
+		User.find({following:userId}, function(err, emberUsersFollowedBy){
 			var emberUsersFollowedByArray = [];
 			emberUsersFollowedBy.forEach(function(user) {
 				emberUsersFollowedByArray.push(wrapper.emberUser(user));
@@ -75,7 +75,7 @@ exports.getAllUsers = function(req, res, next) {
 	} else if(isFollowing) {
 
 		var userId = req.query.showFollowing;
-		User.find({following:userId}, function(err, emberUsers){
+		User.find({followers:userId}, function(err, emberUsers){
 			var emberUsersArray = [];
 			emberUsers.forEach(function(user) {
 				emberUsersArray.push(wrapper.emberUser(user));
@@ -105,4 +105,13 @@ exports.userFollowing = function(req, res){
 	} else {
 		return res.send(404);
 	}
+}
+
+exports.followUser = function(req, res) {
+	var newFollower = req.query.followUsername;
+	User.update({followers:newFollower}, function(err){
+		if(err) { return res.send(400); }
+		console.log('followed!');
+		return res.send(200);
+	});
 }

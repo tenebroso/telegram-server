@@ -43,6 +43,8 @@ app.get('/api/users/:user_id', userOperations.getUser);
 
 app.get('/api/users/:user_id/following', userOperations.userFollowing);
 
+app.get('/api/follow', userOperations.followUser);
+
 app.get('/api/logout', userOperations.logout);
 
 var server = app.listen(3000, function() {
