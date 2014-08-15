@@ -37,7 +37,7 @@ exports.getAllUsers = function(req, res, next) {
 	var password = req.query.password;
 	var operation = req.query.operation;
 	var followedBy = req.query.showFollowers;
-	var following = req.query.following;
+	var isFollowing = req.query.showFollowing;
 	var isAuthenticated = req.query.isAuthenticated;
 	var loggedIn = false;
 	if(operation == 'login') {
@@ -62,11 +62,28 @@ exports.getAllUsers = function(req, res, next) {
 		}
 	} else if(followedBy) {
 
-		var userId = req.params.showFollowers;
-		User.find({'followers': ['jonbukiewicz']}, function(err, users){
-			if(err || !users) return res.send(404);
-			return res.send(200, {users:[users]});
+		var userId = req.query.showFollowers;
+		User.find({followers:userId}, function(err, emberUsersFollowedBy){
+			var emberUsersFollowedByArray = [];
+			emberUsersFollowedBy.forEach(function(user) {
+				emberUsersFollowedByArray.push(wrapper.emberUser(user));
+			});
+			if(err || !emberUsersFollowedBy) return res.send(404);
+			return res.send(200, {users:emberUsersFollowedByArray});
 		});
+
+	} else if(isFollowing) {
+
+		var userId = req.query.showFollowing;
+		User.find({following:userId}, function(err, emberUsers){
+			var emberUsersArray = [];
+			emberUsers.forEach(function(user) {
+				emberUsersArray.push(wrapper.emberUser(user));
+			});
+			if(err || !emberUsers) return res.send(404);
+			return res.send(200, {users:emberUsersArray});
+		});
+
 		
 	} else {
 		console.log('send all users');

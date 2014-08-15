@@ -3,7 +3,9 @@ exports.emberUser = function(mongoUser) {
 		name: mongoUser.name,
 		id: mongoUser.id,
 		email: mongoUser.email,
-		photo: '/assets/avatars/avatar-orange.png'
+		photo: '/assets/avatars/avatar-orange.png',
+		following: mongoUser.following,
+		followers: mongoUser.followers
 	};
 	return userData;
 }
