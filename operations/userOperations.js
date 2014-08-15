@@ -36,7 +36,7 @@ exports.getAllUsers = function(req, res, next) {
 	var username = req.query.username;
 	var password = req.query.password;
 	var operation = req.query.operation;
-	var followedBy = req.query.followedBy;
+	var followedBy = req.query.showFollowers;
 	var following = req.query.following;
 	var isAuthenticated = req.query.isAuthenticated;
 	var loggedIn = false;
@@ -60,7 +60,13 @@ exports.getAllUsers = function(req, res, next) {
 			console.log('send empty array of users');
 			res.send(200, {users:[]});
 		}
-	} else if(req.query.followedBy) {
+	} else if(followedBy) {
+
+		var userId = req.params.showFollowers;
+		User.find({'followers': ['jonbukiewicz']}, function(err, users){
+			if(err || !users) return res.send(404);
+			return res.send(200, {users:[users]});
+		});
 		
 	} else {
 		console.log('send all users');
@@ -75,3 +81,11 @@ exports.logout = function(req, res){
 	req.logout();
 	return res.send(200);
 };
+
+exports.userFollowing = function(req, res){
+	if(isAuthenticated == 'true') {
+		return res.send(200);
+	} else {
+		return res.send(404);
+	}
+}
