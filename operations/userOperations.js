@@ -108,10 +108,12 @@ exports.userFollowing = function(req, res){
 }
 
 exports.followUser = function(req, res) {
-	var newFollower = req.query.followUsername;
-	User.update({followers:newFollower}, function(err){
-		if(err) { return res.send(400); }
-		console.log('followed!');
+	var newFollowee = req.query.followUsername;
+	var currentUser = req.user.id;
+	var query = { id: newFollowee };
+	var update = { $addToSet: { followers: currentUser }};
+	User.findOneAndUpdate(query, update, function(err, result){
+		if(err) return res.send(404);
 		return res.send(200);
 	});
 }
