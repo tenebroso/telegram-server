@@ -2,6 +2,7 @@ var conn = require('../database_conn');
 var User = conn.model('users');
 var wrapper = require('../wrappers/emberWrapper');
 var passport = require('passport');
+var async = require('async');
 require('../auth/auth')(passport);
 
 exports.createUser = function(req, res) {
@@ -110,10 +111,51 @@ exports.userFollowing = function(req, res){
 exports.followUser = function(req, res) {
 	var newFollowee = req.query.followUsername;
 	var currentUser = req.user.id;
-	var query = { id: newFollowee };
-	var update = { $addToSet: { followers: currentUser }};
-	User.findOneAndUpdate(query, update, function(err, result){
-		if(err) return res.send(404);
+	
+
+	async.parallel([
+		function(callback){
+			var query = { id: newFollowee };
+			var update = { $addToSet: { followers: currentUser }};
+			User.findOneAndUpdate(query, update, function(err, result){
+				callback();
+			});
+		},
+		function(callback){
+			var query = { id: currentUser };
+			var update = { $addToSet: { following: newFollowee }};
+			User.findOneAndUpdate(query, update, function(err, result){
+				callback();
+			});	
+		}
+	],
+	function(err, results){
+		if (err) return res.send(404, err);
+		return res.send(200);
+	});
+}
+
+exports.unfollowUser = function(req, res) {
+	var unfollowedUser = req.query.unFollowUsername;
+	var currentUser = req.user.id;
+	async.parallel([
+		function(callback){
+			var query = { id: currentUser };
+			var update = { $pull: { following: unfollowedUser }};
+			User.findOneAndUpdate(query, update, function(err, result){
+				callback();
+			});
+		},
+		function(callback){
+			var query = { id: unfollowedUser };
+			var update = { $pull: { followers: currentUser }};
+			User.findOneAndUpdate(query, update, function(err, result){
+				callback();
+			});	
+		}
+	],
+	function(err, results){
+		if (err) return res.send(404, err);
 		return res.send(200);
 	});
 }
