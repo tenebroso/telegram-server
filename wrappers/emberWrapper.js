@@ -1,12 +1,27 @@
+function checkCurrentUserIsFollowing(mongoUser, authenticatedUser) {
+	var loggedInUser = authenticatedUser;
+	var currentUser = mongoUser;
+	console.log(currentUser.id);
+	if (currentUser.following.indexOf(loggedInUser.id) !== -1) {
+		console.log('true');
+		return true;
+	} else {
+		console.log('false');
+		return false;
+	}
+}
+
 exports.emberUser = function(mongoUser) {
 	var userData = {
 		name: mongoUser.name,
 		id: mongoUser.id,
 		email: mongoUser.email,
 		photo: '/assets/avatars/avatar-orange.png',
-		following: mongoUser.following,
-		followers: mongoUser.followers
+		followingCurrentuser:true
+		//following: mongoUser.following,
+		//followers: mongoUser.followers
 	};
+	checkCurrentUserIsFollowing(userData, user);
 	return userData;
 }
 
