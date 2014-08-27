@@ -27,7 +27,7 @@ exports.getUser = function(req, res) {
 	var userId = req.params.user_id;
 	User.findOne({id:userId}, function(err, user){
 		if(err || !user) return res.send(404);
-		return res.send(200, {user:user});
+		return res.send(200, {user:wrapper.emberUser(user,req.user)});
 	});
 
 
