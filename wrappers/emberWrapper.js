@@ -1,21 +1,5 @@
-function checkCurrentUserIsFollowing(loggedInUser, mongoUser) {
-	var currentUser = mongoUser;
-/*	console.log('current user', currentUser.id);
-	console.log('following',currentUser.following);
-	console.log('logged in user', loggedInUser.id);
-*/
-	/*var followersArray = [];
-	followersArray.forEach(function(user) {
-		console.log('following', user);
-	});*/
-
-	var emberUsersFollowedByArray = [];
-	emberUsersFollowedBy.forEach(function(follower) {
-		//emberUsersFollowedByArray.push(wrapper.emberUser(user));
-		console.log(currentUser.following);
-	});
-
-	if (currentUser.following.indexOf(loggedInUser.id) !== -1) {
+function checkLoggedInUserFollowsUser(loggedInUser, mongoUser) {
+	if(loggedInUser.following.indexOf(mongoUser.id)!== -1) {
 		console.log('true');
 		return true;
 	} else {
@@ -30,14 +14,12 @@ exports.emberUser = function(mongoUser, loggedInUser) {
 		id: mongoUser.id,
 		email: mongoUser.email,
 		photo: '/assets/avatars/avatar-orange.png',
-		followingCurrentuser:false
-		//following: mongoUser.following,
-		//followers: mongoUser.followers
+		followedByLoggedInUser:false
 	};
 	if(loggedInUser) {
-		userData.followingCurrentUser = checkCurrentUserIsFollowing(loggedInUser, mongoUser);
+		userData.followedByLoggedInUser = checkLoggedInUserFollowsUser(loggedInUser, mongoUser);
 	}
-	//checkCurrentUserIsFollowing(userData, req.user);
+	console.log(userData);
 	return userData;
 }
 
